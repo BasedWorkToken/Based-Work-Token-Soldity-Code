@@ -1,10 +1,20 @@
-//MUST REMOVE
-//      Must taken out the 0xBTC mock ERC20 contract and put in 0xBitcoins' Base Layer 2 Address on Mainnet Launch.
-//		reward_amount = 25*10**18;  //Zero reward for first days to setup miners 
-//    ^^^ MUST CHANGE TO 0 in constructor reward_amount because no reward until openMining is called
-//    ^^^ MUST CHANGE TO 0 in constructor reward_amount because no reward until openMining is called
-//    ^^^ MUST CHANGE TO 0 in constructor reward_amount because no reward until openMining is called
+/**
+ *Submitted for verification at sepolia.basescan.org on 2024-12-15
+*/
 
+//MUST REMOVE ALL THINGS FROM HEADING BEFORE MAINNET LAUNCH!!!!
+//MUST REMOVE ALL THINGS FROM HEADING BEFORE MAINNET LAUNCH!!!!
+//      Must taken out the 0xBitcoin mock ERC20 contract and put in 0xBitcoins' Base Layer 2 Address on Mainnet Launch.
+//		reward_amount =  ( 50 * 10**18)/( 2**(rewardEra) );  //Zero reward for first days to setup miners 
+//    ^^^ MUST CHANGE TO 0 in constructor reward_amount because no reward until openMining is called
+//    ^^^ MUST CHANGE TO 0 in constructor reward_amount because no reward until openMining is called
+//    ^^^ MUST CHANGE TO 0 in constructor reward_amount because no reward until openMining is called
+/* MUST REMOVE AdjustDiff()  for mainnet, it is only used to reset for testing test more.
+
+    function AdjustDiff() public onlyOwner {
+            miningTarget = 2**234;
+    } 
+    */
 //
 // Based Work Token - BWORK Token - Token and Mining Contract Base Network
 //
@@ -55,7 +65,7 @@
 
 
 /////
-//IMPORT STUFF below, then main zkBitcoin contract
+//IMPORT Includes below, then main BasedWorkToken contract
 /////
 
 // File: contracts/draft-IERC20Permit.sol
@@ -1236,8 +1246,7 @@ interface IRightsTo0xBitcoinV1 {
 
 
 contract RightsTo0xBitcoinV1 is ERC20Permit, Ownable {
-	constructor() ERC20("Rights To 0xBitcoin v1 token", "R0xBTC", 18, 10_835_900 * 10**18 ) ERC20Permit("Rights To 0xBitcoin v1 token") {
-        _mint(0x543c3F3Ee66Cf54746d4c4011d5cACf544a427f5, 44  * 10**18);
+	constructor() ERC20("Rights To 0xBitcoin Token", "R0xBTC", 18, 10_835_900 * 10**18 ) ERC20Permit("Rights To 0xBitcoin Token") {
      
     }
 
@@ -1252,8 +1261,7 @@ contract RightsTo0xBitcoinV1 is ERC20Permit, Ownable {
 
 
 contract a0xbtcMock is ERC20Permit {
-	constructor() ERC20("Mock 0xbtc5", "M0xBTC", 8, 10_835_900 * 10**8 ) ERC20Permit("Mock 0xbtc5") {
-	_mint(0x543c3F3Ee66Cf54746d4c4011d5cACf544a427f5, 10 * 10**8 );
+	constructor() ERC20("Mock 0xBitcoin Token", "M0xBTC", 8, 10_835_900 * 10**8 ) ERC20Permit("Mock 0xBitcoin Token") {
         
     }
     function withdrawToken(uint256 _amount) external {
@@ -1267,7 +1275,7 @@ contract a0xbtcMock is ERC20Permit {
 
 
 
-contract BasedWorkToken is ERC20Permit {
+contract BasedWorkToken is ERC20Permit, Ownable {
 
 
 
@@ -1290,7 +1298,6 @@ contract BasedWorkToken is ERC20Permit {
     // This mapping can be used to store combinations of challenge, user, and nonce which is the digest
     // to ensure they are not used again.
     mapping(bytes32 => mapping(bytes32 => bool) )public usedCombinations;
-    //ZKBITCOIN INITALIZE Start
 	
     uint public constant _totalSupply = 21000000000000000000000000;
     uint public latestDifficultyPeriodStarted2 = block.timestamp; //BlockTime of last readjustment
@@ -1302,16 +1309,18 @@ contract BasedWorkToken is ERC20Permit {
 
     //a little number
     uint public  _MINIMUM_TARGET =  2**16;
-    uint public miningTarget = 2**224;  //1 difficulty to start normalized to 0xBTC and Bitcoins
+    uint public miningTarget = 2**234;  //1 difficulty to start normalized to 0xBitcoins starting difficulty
   
     bytes32 public challengeNumber = blockhash(block.number - 1); //this is the next first challenge that will be used, challengeNumber is the main challenge to solve for
     mapping(bytes32 => bool) public usedChallenges;
-    uint public rewardEra = 0;
+    uint public rewardEra = 1;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
-    uint public reward_amount = 0;
-    
+//    ^^^ MUST CHANGE TO 0 in constructor for reward_amount because no reward until openMining is called
+
+//    ^^^ MUST CHANGE TO 0 in constructor  for reward_amount because no reward until openMining is called
+    uint public reward_amount = ( 50 * 10**18)/( 2**(rewardEra) );
     //Stuff for Functions
-    uint public tokensMinted = 0;  //Tokens Minted only for Miners
+    uint public tokensMinted = 10_835_900 * 10**18;  //Tokens Minted, 0xBitcoin had 10_835_900 0xBitcoin mined so start there.
     uint public epochOld = 0;  //Epoch count at each readjustment 
     // startup locks
     bool initeds = false;
@@ -1326,41 +1335,28 @@ contract BasedWorkToken is ERC20Permit {
 //adjust StartTime comments about actual start time
 //adjust StartTime comments about actual start time
 //1738771200  //Date and time (GMT): Wednesday, Feb 5, 2025 4:00:00 PM GMT
-
-//    ^^^ MUST CHANGE TO 0 in constructor for reward_amount because no reward until openMining is called
-
-//    ^^^ MUST CHANGE TO 0 in constructor  for reward_amount because no reward until openMining is called
 	constructor() ERC20("Based Work Token", "BWORK", 18, 21_000_000 * 10 ** 18) ERC20Permit("Based Work Token") {
-		miningTarget = 2**234; //1 difficulty to start normalized to 0xBTC and Bitcoins. u can solve but no reward until startTime and OpenMining is ran
-		startTime = block.timestamp;  //startTime =  1738771200;  //Date and time (GMT): Wednesday, Feb 5, 2025 4:00:00 PM GMT
-		reward_amount = 25 * 10**18;  //Zero reward for first days to setup miners
-		rewardEra = 1;
-		tokensMinted = 10_835_900 * 10**18;
-        maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
-		epochCount = 0;
-		epochOld = 0;
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
 		challengeNumber = blockhash(block.number -1); //generate a new one so we can start with a fresh
 		usedChallenges[blockhash(block.number - 1)] = true;
 		
         
-        a0xbtcMock child = new a0xbtcMock();
      
-        RightsTo0xBitcoinV1 child2 = new RightsTo0xBitcoinV1();
-     
-        
+        RightsTo0xBitcoinV1 child2 = new RightsTo0xBitcoinV1(); //Launches RightsTo0xBitcoin contract for us
         _RightsTo0xBitcoinV1_Address = address(child2);//_RightsTo0xBitcoinV1;
+
+
+        a0xbtcMock child = new a0xbtcMock(); //DELETE THIS USE BELOW
 		_0xBitcoin_Address = address(child); //ZeroXBitcoin Address;  //Should be 0xc4D4FD4F4459730d176844c170F2bB323c87Eb3B = Mainnet Base
 
 		
-        
-        
-        
-        _mint(msg.sender, 1 * 10**18);
 	}
 
-
+    function AdjustDiff() public onlyOwner {
+            miningTarget = 2**234;
+    } 
+    
 	function depositFromV1toV2(uint amount) public {
 	
 		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin V1 to recieve RightsTo0xBitcoinV1 and 0xBitcoin V2");
@@ -1410,12 +1406,8 @@ contract BasedWorkToken is ERC20Permit {
 		locked = true;
 		require(block.timestamp >= startTime && block.timestamp <= startTime + 60* 60 * 24* 7, "Must wait until after startTime (Feb 5th 2025 @ 4PM GMT) epcohTime = 1738771200");
 		challengeNumber = blockhash(block.number -1); //generate a new one so we can start fresh
-		reward_amount = 25 * 10**18;
-		rewardEra = 1;
-		miningTarget = (2**234);  //0xBTCs and Bitcoins starting difficulty of 1
-		tokensMinted = 10_835_900 * 10**18;
-		epochCount = 0;
-		epochOld = 0;
+        reward_amount = ( 50 * 10**18)/( 2**(rewardEra) );
+		miningTarget = (2**234);  //0xBTCs starting difficulty of 1
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
 		
@@ -1426,7 +1418,7 @@ contract BasedWorkToken is ERC20Permit {
 
 
 	///
-	// zkBitcoin Multi Minting
+	// Based Work Token Multi Minting
 	///
 
 
@@ -1480,7 +1472,7 @@ contract BasedWorkToken is ERC20Permit {
 	}
 	
 	///
-	// zkBitcoin Multi Minting With ReWritter for when at the end of a challenge period. Very rare usage.
+	// Based Work Token Multi Minting With ReWritter for when at the end of a challenge period. Very rare usage.
 	///
 
 	function multiMint_SameAddress_2(address mintToAddress, uint256 [] memory nonce) public {
@@ -1538,7 +1530,7 @@ contract BasedWorkToken is ERC20Permit {
 	
 
 	///
-	// zkBitcoin Single Minting
+	// Based Work Token Single Minting
 	///
 
 	//compatibility function
@@ -1630,35 +1622,33 @@ contract BasedWorkToken is ERC20Permit {
 	}
 
 
+    function seconds_Until_adjustmentSwitch() public view returns (uint secs) {
+        uint256 blktimestamp = block.timestamp;
+        uint256 local_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT;
+        uint256 adjusDiffTargetTime = local_BLOCKS_PER_READJUSTMENT * targetTime;
+        uint256 localEpochCount = epochCount;
+        uint256 localEpochOld = epochOld;
 
-	function seconds_Until_adjustmentSwitch() public view returns (uint secs){
-		
-		uint256 blktimestamp = block.timestamp;
-		
-		uint local_BLOCKS_PER_READJUSTMENT = _BLOCKS_PER_READJUSTMENT;
-		uint adjusDiffTargetTime =local_BLOCKS_PER_READJUSTMENT * targetTime;
-		uint localEpochCount = epochCount;
-		uint localEpochOld = epochOld;
-		
-		uint MultiplierOfTime = 3;
-		if(localEpochCount - localEpochOld > 0){
-			
-			MultiplierOfTime = (((localEpochCount - localEpochOld - 1)/(local_BLOCKS_PER_READJUSTMENT/4))+3);
-		}
-		
-		if(MultiplierOfTime == 6){
-			MultiplierOfTime=5;
-		}
+        uint256 MultiplierOfTime = 3;
+        if (localEpochCount - localEpochOld > 0) {
+            MultiplierOfTime = (((localEpochCount - localEpochOld - 1) / (local_BLOCKS_PER_READJUSTMENT / 4)) + 3);
+        }
 
-		uint adjustFinal = adjusDiffTargetTime * MultiplierOfTime;
-		
-		adjusDiffTargetTime =adjustFinal + latestDifficultyPeriodStarted2;
-		if(adjusDiffTargetTime - blktimestamp <0){
-			return 0;
-		}
-		return adjusDiffTargetTime - blktimestamp;
-	
-	}
+        if (MultiplierOfTime == 6) {
+            MultiplierOfTime = 5;
+        }
+
+        uint256 adjustFinal = adjusDiffTargetTime * MultiplierOfTime;
+
+        adjusDiffTargetTime = adjustFinal + latestDifficultyPeriodStarted2;
+        int useThisForTimeLeft = int256(adjusDiffTargetTime) - int256(blktimestamp);
+        if (useThisForTimeLeft < 0) {
+            return 0;
+        }
+        return adjusDiffTargetTime - blktimestamp;
+    }
+
+
 
 
 
