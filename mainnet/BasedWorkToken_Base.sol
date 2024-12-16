@@ -1454,11 +1454,19 @@ contract BasedWorkToken {
 		
 		uint multiplier_local = localMiningTarget / localDigestINT;
 		uint compensation = calculateCompensation(multiplier_local);
+
 		uint local_epoch_cnt = epochCount;
-       	_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, blocksToReadjust());
+        uint local_blocks_to_readjust = blocksToReadjust();
+
+        if(compensation > local_blocks_to_readjust){
+            compensation=local_blocks_to_readjust;
+        }
+
+       	_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
+
 		local_epoch_cnt = epochCount - local_epoch_cnt;
+
 		uint localreward = local_epoch_cnt*reward_amount;
-		
 		
 		//if max supply for the era will be exceeded next reward round then enter the new era before that happens
 		//59 is the final reward era, almost all tokens minted
