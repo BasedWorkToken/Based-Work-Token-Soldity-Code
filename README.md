@@ -1,2 +1,2 @@
-# 0xBitcoin-v2-Solidity
-All solidity files for launch of 0xBitcoin v2
+# Based-Work-Token-Solidity
+All solidity files for launch of Based Work Token
