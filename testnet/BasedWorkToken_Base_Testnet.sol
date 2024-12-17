@@ -14,6 +14,13 @@
     address public _BasedWorkToken_Address = address(xxxx); Should Be Based Work Token Address on Base
       
     address public _BasedWorkToken_Address = address(0x0);
+
+
+
+//REWARD_Amount MUST BE 0 in constructor FOR MAINNET
+//REWARD_Amount MUST BE 0 in constructor FOR MAINNET
+    uint public reward_amount = ( 50 * 10**18)/( 2**(rewardEra) ); //must make 0 in MAINNET
+    
     */
 // Based Work Token - BWORK Token - Mining Contract Base Network
 //
@@ -1278,7 +1285,12 @@ contract BasedWorkToken is Ownable {
     mapping(bytes32 => bool) public usedChallenges;
     uint public rewardEra = 1;
     uint public maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
-    uint public reward_amount = 0;
+
+
+//REWARD_Amount MUST BE 0 in constructor FOR MAINNET
+//REWARD_Amount MUST BE 0 in constructor FOR MAINNET
+//REWARD_Amount MUST BE 0 in constructor FOR MAINNET
+    uint public reward_amount = ( 50 * 10**18)/( 2**(rewardEra) ); //must make 0 in MAINNET
     //Stuff for Functions
     uint public tokensMinted = 10_835_900 * 10**18;  //Tokens Minted, 0xBitcoin had 10_835_900 0xBitcoin mined so start there.
     uint public epochOld = 0;  //Epoch count at each readjustment 
@@ -1294,7 +1306,7 @@ contract BasedWorkToken is Ownable {
     address public _BasedWorkToken_Address = address(xxxx); Should Be Based Work Token Address on Base
       
     */
-    address public _BasedWorkToken_Address = address(0x37591b4f7c411C7D148606287Cbb948021112615);
+    address public _BasedWorkToken_Address = address(0xd3AF0f5362A163E7DcC2c47375C8fcE10Df5933C); //Copid from deployed contract for now
 	constructor(){
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
