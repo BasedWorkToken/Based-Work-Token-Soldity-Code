@@ -1,5 +1,11 @@
 //MUST FIX BEFORE LAUNCH
     /*
+
+    REMOVE OWNABLE FROM CONTRACT, REMOVE adjustDiff From contract
+    REMOVE OWNABLE FROM CONTRACT, REMOVE adjustDiff From contract
+    REMOVE OWNABLE FROM CONTRACT, REMOVE adjustDiff From contract
+    REMOVE OWNABLE FROM CONTRACT, REMOVE adjustDiff From contract
+    
     ADD CORRECT BASED WORK TOKEN ADDRESS TO CONTRACT
     address public _BasedWorkToken_Address = address(xxxx); Should Be Based Work Token Address on Base
       
@@ -1299,8 +1305,6 @@ contract BasedWorkToken is Ownable {
     //MUST REMOVE ADJUSTDIFF BEFORE MAINNET LAUNCH and REMOVE OWNABLE FROM CONTRACT
     //MUST REMOVE ADJUSTDIFF BEFORE MAINNET LAUNCH and REMOVE OWNABLE FROM CONTRACT
     //MUST REMOVE ADJUSTDIFF BEFORE MAINNET LAUNCH and REMOVE OWNABLE FROM CONTRACT
-
-
     function adjustDiff () public onlyOwner {
 
         miningTarget = 2 ** 234;
