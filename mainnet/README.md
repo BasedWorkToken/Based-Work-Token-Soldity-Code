@@ -1,2 +1,2 @@
-# Solidity-Code-Mainnet-zkBitcoin
-Solidity Code for zkBitcoin mainnet
+# Solidity-Code-Mainnet-BasedWorkToken
+Solidity Code for Based Work Token mainnet
