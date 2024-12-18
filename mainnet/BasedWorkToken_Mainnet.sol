@@ -1108,45 +1108,6 @@ abstract contract ERC20Permit is ERC20, IERC20Permit, EIP712 {
     }
 }
 
-// File: contracts/BasedWorkToken.sol
-
-// Based Work Token - BWORK Token - Token and 0xBitcoin <-> BWORK Conversion Contract Ethereum Network
-//
-// Website: https://BasedWorkToken.org/
-// Github: https://github.com/BasedWorkToken/
-// Discord: https://discord.gg/QrGNf47ATk/
-// Twitter: https://x.com/BasedWorkToken/
-//
-//
-// Distrubtion of Based Work Token - BWORK Token is as follows:
-//
-// 100% of BWORK Token is distributed to users by using Proof of work and is considered a Layer 2 and v2 of 0xBitcoin allowing all 0xBitcoin to be converted to BWORK Tokens.
-// Computers solve a complicated problem to gain tokens!
-// 100% of 0xBitcoin accepted for BWORK Tokens
-// 100% Of the Token is distributed to the users! No dev fee!
-// Token Mining will take place on Base Blockchain, while having the token reside on Mainnet Ethereum.
-//
-//
-// Symbol: BWORK
-// Decimals: 18
-//
-// Total supply: 21,000,000.000000000000000000
-//   =
-// 10,835,900 0xBitcoin Tokens able to transfered to BWORK Tokens.
-// +
-// 10,164,100 Mined over 100+ years using Bitcoins Distrubtion halvings every ~4 years. Uses Proof-oF-Work to distribute the tokens. Public Miner is available see https://dWorkToken.org 
-//  
-//
-// No dev cut, or advantage taken at launch. Public miner available at launch. 100% of the token is given away fairly over 100+ years using Bitcoins model!
-// 
-// Mint 2016 answers per challenge in this cost savings Bitcoin!! Less failed transactions as the challenge only changes every 2016 answers instead of every answer.
-//
-// Credits: 0xBitcoin
-//
-// startTime =  1738771200;  //Date and time (GMT): Wednesday, Feb 5, 2025 4:00:00 PM GMT then openMining functioncan then be called and mining will have rewards, until then all rewards will be 0.
-
-
-
 
 
 
@@ -1247,53 +1208,45 @@ contract RightsTo0xBitcoinV1 is ERC20Permit, Ownable {
     }
 }
 
-/*TEST APPROVAL FEATURE WORKS SO NO LONGER NEEDED
+// File: contracts/BasedWorkToken_Mainnet.sol
 
-interface ApproveAndCallFallBack {
-    function receiveApproval(
-        address from,
-        uint256 tokens,
-        address token,
-        bytes calldata data
-    ) external;
-}
+// Based Work Token - BWORK Token - Token and 0xBitcoin <-> BWORK Conversion Contract Ethereum Network
+//
+// Website: https://BasedWorkToken.org/
+// Github: https://github.com/BasedWorkToken/
+// Discord: https://discord.gg/QrGNf47ATk/
+// Twitter: https://x.com/BasedWorkToken/
+//
+//
+// Distrubtion of Based Work Token - BWORK Token is as follows:
+//
+// 100% of BWORK Token is distributed to users by using Proof of work and is considered a Layer 2 and v2 of 0xBitcoin allowing all 0xBitcoin to be converted to BWORK Tokens.
+// Computers solve a complicated problem to gain tokens!
+// 100% of 0xBitcoin accepted for BWORK Tokens
+// 100% Of the Token is distributed to the users! No dev fee!
+// Token Mining will take place on Base Blockchain, while having the token reside on Mainnet Ethereum.
+//
+//
+// Symbol: BWORK
+// Decimals: 18
+//
+// Total supply: 21,000,000.000000000000000000
+//   =
+// 10,835,900 0xBitcoin Tokens able to transfered to BWORK Tokens.
+// +
+// 10,164,100 Mined over 100+ years using Bitcoins Distrubtion halvings every ~4 years. Uses Proof-oF-Work to distribute the tokens. Public Miner is available see https://dWorkToken.org 
+//  
+//
+// No dev cut, or advantage taken at launch. Public miner available at launch. 100% of the token is given away fairly over 100+ years using Bitcoins model!
+// 
+// Mint 2016 answers per challenge in this cost savings Bitcoin!! Less failed transactions as the challenge only changes every 2016 answers instead of every answer.
+//
+// Credits: 0xBitcoin
+//
+// startTime =  1738771200;  //Date and time (GMT): Wednesday, Feb 5, 2025 4:00:00 PM GMT then openMining functioncan then be called and mining will have rewards, until then all rewards will be 0.
 
 
-contract a0xbtcMock is ERC20Permit {
-	constructor() ERC20("Mock 0xBitcoin Token", "M0xBTC", 8, 10_835_900 * 10**8 ) ERC20Permit("Mock 0xBitcoin Token") {
-        
-    }
 
-    function withdrawToken(uint256 _amount) external {
-        // transfer the token from address of this contract
-        // to address of the user (executing the withdrawToken() function)
-                _mint(msg.sender, _amount);
-    }
-
-    // ------------------------------------------------------------------------
-
-    // Token owner can approve for `spender` to transferFrom(...) `tokens`
-
-    // from the token owner's account. The `spender` contract function
-
-    // `receiveApproval(...)` is then executed
-
-    // ------------------------------------------------------------------------
-
-   function approveAndCall(
-        address spender,
-        uint256 tokens,
-        bytes calldata data
-    ) public returns (bool success) {
-        // Approve the spender to use tokens
-        increaseAllowance(spender, tokens);
-
-        // Call the spender's `receiveApproval` function
-        ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, address(this), data);
-    }
-}
-
-*/
 
 contract BasedWorkToken_Mainnet is ERC20Permit {
 
