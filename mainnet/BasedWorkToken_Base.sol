@@ -1356,7 +1356,7 @@ contract BasedWorkToken {
 			payout = payout.div(2);
 		}
 
-        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1414,7 +1414,7 @@ contract BasedWorkToken {
 		}
 
 
-        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+       	`	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1473,7 +1473,7 @@ contract BasedWorkToken {
 		}
 
         
-        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, localreward);
+        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, localreward);
 
 		emit Mint(msg.sender, localreward, epochCount, localChallengeNumber);
         
