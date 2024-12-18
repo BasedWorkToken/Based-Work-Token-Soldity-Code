@@ -1342,7 +1342,7 @@ contract BasedWorkToken {
 		  
 		}
 
-       	_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1399,7 +1399,7 @@ contract BasedWorkToken {
 		  
 		}
 
-       	_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1456,7 +1456,7 @@ contract BasedWorkToken {
             compensation=local_blocks_to_readjust;
         }
 
-       	_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
+       		_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
 
 		local_epoch_cnt = epochCount - local_epoch_cnt;
 
