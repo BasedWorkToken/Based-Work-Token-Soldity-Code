@@ -1341,6 +1341,7 @@ contract BasedWorkToken {
 
 		  
 		}
+        	require(GoodLoops > 0, "No successful mints in this transaction.");
 
        		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
@@ -1399,6 +1400,8 @@ contract BasedWorkToken {
 		  
 		}
 
+        	require(GoodLoops > 0, "No successful mints in this transaction.");
+
        		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
@@ -1448,6 +1451,7 @@ contract BasedWorkToken {
 		
 		uint multiplier_local = localMiningTarget / localDigestINT;
 		uint compensation = calculateCompensation(multiplier_local);
+        	require(compensation > 0, "No successful mints in this transaction.");
 
 		uint local_epoch_cnt = epochCount;
 	        uint local_blocks_to_readjust = blocksToReadjust();
