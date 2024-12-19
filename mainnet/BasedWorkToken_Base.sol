@@ -47,7 +47,7 @@
 
 
 /////
-//IMPORT Includes below, then main BasedWorkToken contract
+//IMPORT Includes below, then main BasedWorkToken contract for Base Network
 /////
 
 // File: contracts/draft-IERC20Permit.sol
@@ -1261,8 +1261,7 @@ contract BasedWorkToken {
     bool locked = false;
     
     address public _BasedWorkToken_Address = address(0xc4D4FD4F4459730d176844c170F2bB323c87Eb3B); //ZeroXBitcoin Address;  //Should be 0xc4D4FD4F4459730d176844c170F2bB323c87Eb3B = Mainnet Base
-      
-    
+
 	constructor(){
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
@@ -1299,7 +1298,8 @@ contract BasedWorkToken {
 		locked = true;
 		require(block.timestamp >= startTime && block.timestamp <= startTime + 60* 60 * 24* 7, "Must wait until after startTime (Feb 5th 2025 @ 4PM GMT) epcohTime = 1738771200");
 		challengeNumber = blockhash(block.number -1); //generate a new one so we can start fresh
-        	reward_amount = ( 50 * 10**18)/( 2**(rewardEra) );
+        reward_amount = ( 50 * 10**18)/( 2**(rewardEra) );
+        maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
 		miningTarget = (2**234);  //0xBTCs starting difficulty of 1
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
@@ -1308,7 +1308,6 @@ contract BasedWorkToken {
 		usedChallenges[challengeNumber] = true;
 		return true;
 	}
-
 
 	///
 	// Based Work Token Multi Minting
@@ -1333,17 +1332,19 @@ contract BasedWorkToken {
 		    uint compensation = calculateCompensation(multiplier_local);
 		    GoodLoops = GoodLoops.add(compensation);
 		    
-	            usedCombinations[localChallengeNumber][digest] = true;
+	        usedCombinations[localChallengeNumber][digest] = true;
+
 		    if (GoodLoops >= NextEpochCount) {
 		    	GoodLoops = NextEpochCount;
-			break;
+			    break;
 		    }
 
 		  
-		}
-        	require(GoodLoops > 0, "No successful mints in this transaction.");
+        }
 
-       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+        require(GoodLoops > 0, "No successful mints in this transaction.");
+
+        _startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1357,7 +1358,7 @@ contract BasedWorkToken {
 			payout = payout.div(2);
 		}
 
-        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1390,19 +1391,19 @@ contract BasedWorkToken {
 		    usedCombinations[localChallengeNumber][digest] = true;
 		    if (GoodLoops >= NextEpochCount) {
 		    	GoodLoops = NextEpochCount;
-	                for(uint xaa = 0; xaa<=xLoop; xaa++){
-	                    bytes32 digest2 = keccak256(abi.encodePacked(localChallengeNumber, msg.sender, nonce[xaa]));
-	                    usedCombinations[localChallengeNumber][digest2]=false;
-	                }
-			break;
+                for(uint xaa = 0; xaa<=xLoop; xaa++){
+                    bytes32 digest2 = keccak256(abi.encodePacked(localChallengeNumber, msg.sender, nonce[xaa]));
+                    usedCombinations[localChallengeNumber][digest2]=false;
+                }
+			    break;
 		    }
 
 		  
 		}
 
-        	require(GoodLoops > 0, "No successful mints in this transaction.");
+        require(GoodLoops > 0, "No successful mints in this transaction.");
 
-       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+        _startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1417,7 +1418,7 @@ contract BasedWorkToken {
 		}
 
 
-       	`	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+       	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1451,16 +1452,15 @@ contract BasedWorkToken {
 		
 		uint multiplier_local = localMiningTarget / localDigestINT;
 		uint compensation = calculateCompensation(multiplier_local);
-        	require(compensation > 0, "No successful mints in this transaction.");
 
 		uint local_epoch_cnt = epochCount;
-	        uint local_blocks_to_readjust = blocksToReadjust();
-	
-	        if(compensation > local_blocks_to_readjust){
-	            compensation=local_blocks_to_readjust;
-	        }
+        uint local_blocks_to_readjust = blocksToReadjust();
 
-       		_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
+        if(compensation > local_blocks_to_readjust){
+            compensation=local_blocks_to_readjust;
+        }
+
+        _startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
 
 		local_epoch_cnt = epochCount - local_epoch_cnt;
 
@@ -1477,7 +1477,7 @@ contract BasedWorkToken {
 		}
 
         
-        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, localreward);
+        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, localreward);
 
 		emit Mint(msg.sender, localreward, epochCount, localChallengeNumber);
         
@@ -1518,11 +1518,11 @@ contract BasedWorkToken {
 
 		if( TimeSinceLastDifficultyPeriod2 > adjustFinal)
 		{
-				blocks = 1; //Complicated math not needed if only moving 1 block; otherwize, local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier - ((localEpochCount - localEpochOld) % (local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier));
-				return (blocks);
+            blocks = 1; //Complicated math not needed if only moving 1 block; otherwize, local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier - ((localEpochCount - localEpochOld) % (local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier));
+            return (blocks);
 		}else{
-			    blocks = local_BLOCKS_PER_READJUSTMENT - ((localEpochCount - localEpochOld) % local_BLOCKS_PER_READJUSTMENT);
-			    return (blocks);
+            blocks = local_BLOCKS_PER_READJUSTMENT - ((localEpochCount - localEpochOld) % local_BLOCKS_PER_READJUSTMENT);
+            return (blocks);
 		}
 	
 	}
