@@ -1299,7 +1299,7 @@ contract BasedWorkToken {
 		locked = true;
 		require(block.timestamp >= startTime && block.timestamp <= startTime + 60* 60 * 24* 7, "Must wait until after startTime (Feb 5th 2025 @ 4PM GMT) epcohTime = 1738771200");
 		challengeNumber = blockhash(block.number -1); //generate a new one so we can start fresh
-        reward_amount = ( 50 * 10**18)/( 2**(rewardEra) );
+        	reward_amount = ( 50 * 10**18)/( 2**(rewardEra) );
 		miningTarget = (2**234);  //0xBTCs starting difficulty of 1
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
@@ -1333,10 +1333,10 @@ contract BasedWorkToken {
 		    uint compensation = calculateCompensation(multiplier_local);
 		    GoodLoops = GoodLoops.add(compensation);
 		    
-	        usedCombinations[localChallengeNumber][digest] = true;
+	            usedCombinations[localChallengeNumber][digest] = true;
 		    if (GoodLoops >= NextEpochCount) {
 		    	GoodLoops = NextEpochCount;
-			    break;
+			break;
 		    }
 
 		  
@@ -1386,14 +1386,14 @@ contract BasedWorkToken {
 		    uint compensation = calculateCompensation(multiplier_local);
 		    GoodLoops = GoodLoops.add(compensation);
 		    
-	        usedCombinations[localChallengeNumber][digest] = true;
+		    usedCombinations[localChallengeNumber][digest] = true;
 		    if (GoodLoops >= NextEpochCount) {
 		    	GoodLoops = NextEpochCount;
-                for(uint xaa = 0; xaa<=xLoop; xaa++){
-                    bytes32 digest2 = keccak256(abi.encodePacked(localChallengeNumber, msg.sender, nonce[xaa]));
-                    usedCombinations[localChallengeNumber][digest2]=false;
-                }
-			    break;
+	                for(uint xaa = 0; xaa<=xLoop; xaa++){
+	                    bytes32 digest2 = keccak256(abi.encodePacked(localChallengeNumber, msg.sender, nonce[xaa]));
+	                    usedCombinations[localChallengeNumber][digest2]=false;
+	                }
+			break;
 		    }
 
 		  
@@ -1450,11 +1450,11 @@ contract BasedWorkToken {
 		uint compensation = calculateCompensation(multiplier_local);
 
 		uint local_epoch_cnt = epochCount;
-        uint local_blocks_to_readjust = blocksToReadjust();
-
-        if(compensation > local_blocks_to_readjust){
-            compensation=local_blocks_to_readjust;
-        }
+	        uint local_blocks_to_readjust = blocksToReadjust();
+	
+	        if(compensation > local_blocks_to_readjust){
+	            compensation=local_blocks_to_readjust;
+	        }
 
        		_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
 
@@ -1560,27 +1560,27 @@ contract BasedWorkToken {
 		uint localEpochCount = epochCount;
 		uint blocksToReadjust_local = nextEpoch;
 		
-        if(epochsz >= blocksToReadjust_local){
-			epochsz = blocksToReadjust_local;
-            epochCount = localEpochCount.add(epochsz);
-            if(_totalSupply < tokensMinted){
-                    reward_amount = 0;
-            }
-            _reAdjustDifficulty();
-            
-            bytes32 localChallenge = blockhash(block.number - 1);
-            localChallenge = bytes32(keccak256(abi.encodePacked(localChallenge, challengeNumber)));
-            require(usedChallenges[localChallenge] == false, "Must never have used this challenge before.");
-            usedChallenges[localChallenge] = true;
-            challengeNumber = localChallenge;
-					
+	        if(epochsz >= blocksToReadjust_local){
+				epochsz = blocksToReadjust_local;
+	            epochCount = localEpochCount.add(epochsz);
+	            if(_totalSupply < tokensMinted){
+	                    reward_amount = 0;
+	            }
+	            _reAdjustDifficulty();
+	            
+	            bytes32 localChallenge = blockhash(block.number - 1);
+	            localChallenge = bytes32(keccak256(abi.encodePacked(localChallenge, challengeNumber)));
+	            require(usedChallenges[localChallenge] == false, "Must never have used this challenge before.");
+	            usedChallenges[localChallenge] = true;
+	            challengeNumber = localChallenge;
+						
 		}else{
-
-            epochCount = localEpochCount.add(epochsz);
-        }
+	
+	            epochCount = localEpochCount.add(epochsz);
+	        }
 				
 	
-    }
+   	}
 
 
 
