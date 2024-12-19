@@ -1251,8 +1251,6 @@ contract RightsTo0xBitcoinV1 is ERC20Permit, Ownable {
 contract BasedWorkToken_Mainnet is ERC20Permit {
 
 
-
-    
     address public _0xBitcoin_Address = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31);
      
     RightsTo0xBitcoinV1 child2 = new RightsTo0xBitcoinV1(); //Launches RightsTo0xBitcoin contract for us
@@ -1267,7 +1265,7 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
          // 21_000_000 - 10_835_900 = 10_164_100
 		_mint(msg.sender, 10_164_100 * 10 ** 18);
         
-    }
+    	}
     
 	function depositFromV1toV2(uint amount) public {
 	
@@ -1277,24 +1275,23 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
 	
 	}
 
-    //Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
+    	//Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
+	function receiveApproval(
+	        address from,
+	        uint256 tokens,
+	        address token,
+	        bytes  calldata data
+	) public {
+	        require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
+	        require(
+	            ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens),
+	            "Must transfer 0xBitcoin V1 to receive RightsTo0xBitcoinV1 and 0xBitcoin V2"
+	        );
 	
-    function receiveApproval(
-        address from,
-        uint256 tokens,
-        address token,
-        bytes  calldata data
-    ) public {
-        require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
-        require(
-            ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens),
-            "Must transfer 0xBitcoin V1 to receive RightsTo0xBitcoinV1 and 0xBitcoin V2"
-        );
-
-        // Mint rights and the new tokens
-        IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(tokens * 10 ** 10, from);
-        _mint(from, tokens * 10 ** 10);
-    }
+	        // Mint rights and the new tokens
+	        IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(tokens * 10 ** 10, from);
+	        _mint(from, tokens * 10 ** 10);
+    	}
         
 
 	function withdrawFromV2toV1(uint amount) public {
