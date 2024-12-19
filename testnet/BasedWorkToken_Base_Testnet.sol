@@ -1393,7 +1393,8 @@ contract BasedWorkToken is Ownable {
 		  
 		}
 
-       	_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+		require(GoodLoops > 0, "No successful mints in this transaction.");
+       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1407,7 +1408,7 @@ contract BasedWorkToken is Ownable {
 			payout = payout.div(2);
 		}
 
-        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1449,8 +1450,9 @@ contract BasedWorkToken is Ownable {
 
 		  
 		}
-
-       	_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+		
+		require(GoodLoops > 0, "No successful mints in this transaction.");
+       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1465,7 +1467,7 @@ contract BasedWorkToken is Ownable {
 		}
 
 
-        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1501,13 +1503,13 @@ contract BasedWorkToken is Ownable {
 		uint compensation = calculateCompensation(multiplier_local);
 
 		uint local_epoch_cnt = epochCount;
-        uint local_blocks_to_readjust = blocksToReadjust();
-
-        if(compensation > local_blocks_to_readjust){
-            compensation=local_blocks_to_readjust;
-        }
-
-       	_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
+	        uint local_blocks_to_readjust = blocksToReadjust();
+	
+	        if(compensation > local_blocks_to_readjust){
+	            compensation=local_blocks_to_readjust;
+	        }
+		require(compensation > 0, "No successful mints in this transaction.");
+	       	_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
 
 		local_epoch_cnt = epochCount - local_epoch_cnt;
 
