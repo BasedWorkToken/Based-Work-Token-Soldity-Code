@@ -1364,13 +1364,15 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
     }
         
 
-	function withdrawFromV2toV1(uint amount) public {
-		require(amount / 10 ** 10 >= 1, "Must deposit at least 10 ** 10 tokens to get 0.0000001 0xBTC because 0xBTC has 8 decimals");
-		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).burnToken(amount, msg.sender);
-		_burn(msg.sender, amount);
-		ERC20(_0xBitcoin_Address).transfer(msg.sender, amount / 10 ** 10);
+	
+    //In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  So only 8 decimals for amountOf_0xBTC_ToRecieve
+	function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
+		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).burnToken(amountOf_0xBTC_ToRecieve * 10**10, msg.sender);
+		_burn(msg.sender, amountOf_0xBTC_ToRecieve *  10 ** 10 );
+		ERC20(_0xBitcoin_Address).transfer(msg.sender, amountOf_0xBTC_ToRecieve);
 	
 	}
+	
 
 
 }
