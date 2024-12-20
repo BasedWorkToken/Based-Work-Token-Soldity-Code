@@ -1303,6 +1303,7 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
         
     }
     
+    //Deposit 0xBitcoin into the contract and recieve RightsTo0xBitcoin and Based Work Token in 1:1.
 	function depositFromV1toV2(uint amount) public {
 	
 		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin V1 to recieve RightsTo0xBitcoinV1 and 0xBitcoin V2");
@@ -1312,7 +1313,6 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
 	}
 
     //Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
-	
     function receiveApproval(
         address from,
         uint256 tokens,
