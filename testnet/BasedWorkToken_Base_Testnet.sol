@@ -1306,7 +1306,7 @@ contract BasedWorkToken is Ownable {
     address public _BasedWorkToken_Address = address(xxxx); Should Be Based Work Token Address on Base
       
     */
-    address public _BasedWorkToken_Address = address(0xd3AF0f5362A163E7DcC2c47375C8fcE10Df5933C); //Copid from deployed contract for now
+    address public _BasedWorkToken_Address = address(0x158A9607FaE8ae0754eF39dE978eA4751A4C6d1f); //Copid from deployed contract for now
 	constructor(){
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
@@ -1351,6 +1351,7 @@ contract BasedWorkToken is Ownable {
 		require(block.timestamp >= startTime && block.timestamp <= startTime + 60* 60 * 24* 7, "Must wait until after startTime (Feb 5th 2025 @ 4PM GMT) epcohTime = 1738771200");
 		challengeNumber = blockhash(block.number -1); //generate a new one so we can start fresh
         reward_amount = ( 50 * 10**18)/( 2**(rewardEra) );
+        maxSupplyForEra = (_totalSupply - _totalSupply.div( 2**(rewardEra + 1)));
 		miningTarget = (2**234);  //0xBTCs starting difficulty of 1
 		latestDifficultyPeriodStarted2 = block.timestamp;
 		latestDifficultyPeriodStarted = block.number;	
@@ -1393,8 +1394,9 @@ contract BasedWorkToken is Ownable {
 		  
 		}
 
-		require(GoodLoops > 0, "No successful mints in this transaction.");
-       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+        require(GoodLoops > 0, "No successful mints in this transaction.");
+
+       	_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1408,7 +1410,7 @@ contract BasedWorkToken is Ownable {
 			payout = payout.div(2);
 		}
 
-        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1450,9 +1452,10 @@ contract BasedWorkToken is Ownable {
 
 		  
 		}
-		
-		require(GoodLoops > 0, "No successful mints in this transaction.");
-       		_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
+
+        require(GoodLoops > 0, "No successful mints in this transaction.");
+
+       	_startNewMiningEpoch_MultiMint_Mass_Epochs(GoodLoops, NextEpochCount);
 
 		uint payout = GoodLoops * reward_amount;
 
@@ -1467,7 +1470,7 @@ contract BasedWorkToken is Ownable {
 		}
 
 
-        	ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
+        ERC20(_BasedWorkToken_Address).transfer(mintToAddress, payout);
 
 		emit Mint(msg.sender, payout, epochCount, localChallengeNumber );	
 		
@@ -1503,13 +1506,13 @@ contract BasedWorkToken is Ownable {
 		uint compensation = calculateCompensation(multiplier_local);
 
 		uint local_epoch_cnt = epochCount;
-	        uint local_blocks_to_readjust = blocksToReadjust();
-	
-	        if(compensation > local_blocks_to_readjust){
-	            compensation=local_blocks_to_readjust;
-	        }
-		require(compensation > 0, "No successful mints in this transaction.");
-	       	_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
+        uint local_blocks_to_readjust = blocksToReadjust();
+
+        if(compensation > local_blocks_to_readjust){
+            compensation=local_blocks_to_readjust;
+        }
+
+       	_startNewMiningEpoch_MultiMint_Mass_Epochs(compensation, local_blocks_to_readjust);
 
 		local_epoch_cnt = epochCount - local_epoch_cnt;
 
@@ -1567,11 +1570,11 @@ contract BasedWorkToken is Ownable {
 
 		if( TimeSinceLastDifficultyPeriod2 > adjustFinal)
 		{
-				blocks = 1; //Complicated math not needed if only moving 1 block; otherwize, local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier - ((localEpochCount - localEpochOld) % (local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier));
-				return (blocks);
+            blocks = 1; //Complicated math not needed if only moving 1 block; otherwize, local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier - ((localEpochCount - localEpochOld) % (local_BLOCKS_PER_READJUSTMENT/difficulty_adjust_multiplier));
+            return (blocks);    
 		}else{
-			    blocks = local_BLOCKS_PER_READJUSTMENT - ((localEpochCount - localEpochOld) % local_BLOCKS_PER_READJUSTMENT);
-			    return (blocks);
+            blocks = local_BLOCKS_PER_READJUSTMENT - ((localEpochCount - localEpochOld) % local_BLOCKS_PER_READJUSTMENT);
+            return (blocks);
 		}
 	
 	}
