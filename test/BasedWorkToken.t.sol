@@ -11,6 +11,5 @@ contract BasedWorkTokenTest is Test {
         basedWorkToken = new BasedWorkToken();
     }
 
-    function test_x() public {
-    }
+    function test_x() public {}
 }
