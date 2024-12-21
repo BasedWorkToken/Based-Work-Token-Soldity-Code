@@ -1108,44 +1108,6 @@ abstract contract ERC20Permit is ERC20, IERC20Permit, EIP712 {
     }
 }
 
-// File: contracts/BasedWorkToken.sol
-
-// Based Work Token - BWORK Token - Token and 0xBitcoin <-> BWORK Conversion Contract Ethereum Network
-//
-// Website: https://BasedWorkToken.org/
-// Github: https://github.com/BasedWorkToken/
-// Discord: https://discord.gg/QrGNf47ATk/
-// Twitter: https://x.com/BasedWorkToken/
-//
-//
-// Distrubtion of Based Work Token - BWORK Token is as follows:
-//
-// 100% of BWORK Token is distributed to users by using Proof of work and is considered a Layer 2 and v2 of 0xBitcoin allowing all 0xBitcoin to be converted to BWORK Tokens.
-// Computers solve a complicated problem to gain tokens!
-// 100% of 0xBitcoin accepted for BWORK Tokens
-// 100% Of the Token is distributed to the users! No dev fee!
-// Token Mining will take place on Base Blockchain, while having the token reside on Mainnet Ethereum.
-//
-//
-// Symbol: BWORK
-// Decimals: 18
-//
-// Total supply: 21,000,000.000000000000000000
-//   =
-// 10,835,900 0xBitcoin Tokens able to transfered to BWORK Tokens.
-// +
-// 10,164,100 Mined over 100+ years using Bitcoins Distrubtion halvings every ~4 years. Uses Proof-oF-Work to distribute the tokens. Public Miner is available see https://dWorkToken.org 
-//  
-//
-// No dev cut, or advantage taken at launch. Public miner available at launch. 100% of the token is given away fairly over 100+ years using Bitcoins model!
-// 
-// Mint 2016 answers per challenge in this cost savings Bitcoin!! Less failed transactions as the challenge only changes every 2016 answers instead of every answer.
-//
-// Credits: 0xBitcoin
-//
-// startTime =  1738771200;  //Date and time (GMT): Wednesday, Feb 5, 2025 4:00:00 PM GMT then openMining functioncan then be called and mining will have rewards, until then all rewards will be 0.
-
-
 
 
 
@@ -1219,16 +1181,37 @@ library ExtendedMath2 {
 }
 
 
-interface IRightsTo0xBitcoinV1 {
+
+// Rights To 0xBitcoin Token - R0xBTC Token - Token Contract
+//
+// Website: https://BasedWorkToken.org/
+// Github: https://github.com/BasedWorkToken/
+// Discord: https://discord.gg/QrGNf47ATk/
+// Twitter: https://x.com/BasedWorkToken/
+//
+//
+// Distrubtion of Rights To 0xBitcoin Token - R0xBTC Token is as follows:
+// 
+// 100% of 0xBitcoin accepted for BWORK Tokens and R0xBTC Tokens.
+// (1 R0xBTC + 1 BWORK) <-> 1 0xBitcoin Token
+//
+// Symbol: R0xBTC
+// Decimals: 18
+//
+// Total supply: 10,835,900.000000000000000000
+//   =
+// 10,835,900 0xBitcoin Tokens able to converted to (BWORK Tokens & R0xBTC Tokens).
+//
+// No dev cut, or advantage taken at launch. Convert anytime no deadline.
+
+
+interface IRightsTo0xBitcoin {
     function withdrawToken(uint256 _amount, address _to) external;
     function burnToken(uint256 _amount, address _from) external;
 }
 
 
-
-
-
-contract RightsTo0xBitcoinV1 is ERC20Permit, Ownable {
+contract RightsTo0xBitcoin is ERC20Permit, Ownable {
 	constructor() ERC20("Rights To 0xBitcoin Token", "R0xBTC", 18, 10_835_900 * 10**18 ) ERC20Permit("Rights To 0xBitcoin Token") {
      
     }
@@ -1287,48 +1270,51 @@ contract RightsTo0xBitcoinV1 is ERC20Permit, Ownable {
 
 contract BasedWorkToken_Mainnet is ERC20Permit {
 
-    address public _0xBitcoin_Address = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31);
+    address public _0xBitcoin_Address = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31); //0xBitcoin Address
      
-    RightsTo0xBitcoinV1 child2 = new RightsTo0xBitcoinV1(); //Launches RightsTo0xBitcoin contract for us
+    RightsTo0xBitcoin child2 = new RightsTo0xBitcoin(); //Launches RightsTo0xBitcoin contract for us
         
-    address public _RightsTo0xBitcoinV1_Address = address(child2);//_RightsTo0xBitcoinV1;
+    address public _RightsTo0xBitcoin_Address = address(child2);//_RightsTo0xBitcoinV1;
 
 
     
 	constructor() ERC20("Based Work Token", "BWORK", 18, 21_000_000 * 10 ** 18) ERC20Permit("Based Work Token") {
-	        //Mint to me to bridge to layer 2 and deposit into the ownerless contract for BasedWorkToken
-	        //A total of 10_164_100 * 10**18 is the maximum amount of Based Work Tokens to mint to reach 21 million
-	        // 21_000_000 - 10_835_900 = 10_164_100
+         //Mint to me to bridge to layer 2 and deposit into the ownerless contract for BasedWorkToken
+         //A total of 10_164_100 * 10**18 is the maximum amount of Based Work Tokens to mint to reach 21 million
+         // 21_000_000 - 10_835_900 = 10_164_100
 		_mint(msg.sender, 10_164_100 * 10 ** 18);
         
-    	}
+    }
     
-	 //Deposit 0xBitcoin into the contract and recieve RightsTo0xBitcoin and Based Work Token in 1:1.
-	 function depositFromV1toV2(uint amount) public {
-		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin to recieve RightsTo0xBitcoin and Based Work Tokens");
-		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(amount * 10 ** 10, msg.sender);
+    //Deposit 0xBitcoin into the contract and recieve RightsTo0xBitcoin and Based Work Token in 1:1.
+	function depositFromV1toV2(uint amount) public {
+	
+		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin to recieve RightsTo0xBitcoin and Based Work Token");
+		IRightsTo0xBitcoin(_RightsTo0xBitcoin_Address).withdrawToken(amount * 10 ** 10, msg.sender);
 		_mint(msg.sender, amount * 10 ** 10);
+	
 	}
 
-	//Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
-	function receiveApproval(address from, uint256 tokens, address token, bytes  calldata data) public {
-	        require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
-	        require(ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens), "Must transfer 0xBitcoin V1 to receive RightsTo0xBitcoin and Based Work Tokens");
-	
-	        // Mint rights and the new tokens
-	        IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(tokens * 10 ** 10, from);
-	        _mint(from, tokens * 10 ** 10);
-	}
+    //Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
+    function receiveApproval(address from, uint256 tokens, address token, bytes  calldata data) public {
+        require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
+        require(ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens), "Must transfer 0xBitcoin to receive RightsTo0xBitcoin and Based Work Token");
+
+        // Mint rights and the new tokens
+        IRightsTo0xBitcoin(_RightsTo0xBitcoin_Address).withdrawToken(tokens * 10 ** 10, from);
+        _mint(from, tokens * 10 ** 10);
+    }
         
 
 
 	
-   	//In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  So only 8 decimals for amountOf_0xBTC_ToRecieve
+    //In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  So only 8 decimals for amountOf_0xBTC_ToRecieve
 	//Must have RightsTo0xBitcoin Tokens & Based Work Token to convert back to 0xBitcoin.
-    	function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
-		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).burnToken(amountOf_0xBTC_ToRecieve * 10**10, msg.sender);
+    function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
+		IRightsTo0xBitcoin(_RightsTo0xBitcoin_Address).burnToken(amountOf_0xBTC_ToRecieve * 10**10, msg.sender);
 		_burn(msg.sender, amountOf_0xBTC_ToRecieve *  10 ** 10 );
 		ERC20(_0xBitcoin_Address).transfer(msg.sender, amountOf_0xBTC_ToRecieve);
+	
 	}
 	
 
