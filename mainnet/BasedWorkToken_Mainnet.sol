@@ -1296,41 +1296,39 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
 
     
 	constructor() ERC20("Based Work Token", "BWORK", 18, 21_000_000 * 10 ** 18) ERC20Permit("Based Work Token") {
-         //Mint to me to bridge to layer 2 and deposit into the ownerless contract for BasedWorkToken
-         //A total of 10_164_100 * 10**18 is the maximum amount of Based Work Tokens to mint to reach 21 million
-         // 21_000_000 - 10_835_900 = 10_164_100
+	        //Mint to me to bridge to layer 2 and deposit into the ownerless contract for BasedWorkToken
+	        //A total of 10_164_100 * 10**18 is the maximum amount of Based Work Tokens to mint to reach 21 million
+	        // 21_000_000 - 10_835_900 = 10_164_100
 		_mint(msg.sender, 10_164_100 * 10 ** 18);
         
-    }
+    	}
     
-    //Deposit 0xBitcoin into the contract and recieve RightsTo0xBitcoin and Based Work Token in 1:1.
-	function depositFromV1toV2(uint amount) public {
-	
-		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin V1 to recieve RightsTo0xBitcoinV1 and 0xBitcoin V2");
+	 //Deposit 0xBitcoin into the contract and recieve RightsTo0xBitcoin and Based Work Token in 1:1.
+	 function depositFromV1toV2(uint amount) public {
+		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin to recieve RightsTo0xBitcoin and Based Work Tokens");
 		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(amount * 10 ** 10, msg.sender);
 		_mint(msg.sender, amount * 10 ** 10);
-	
 	}
 
-    //Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
-    function receiveApproval(address from, uint256 tokens, address token, bytes  calldata data) public {
-        require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
-        require(ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens), "Must transfer 0xBitcoin V1 to receive RightsTo0xBitcoinV1 and 0xBitcoin V2");
-
-        // Mint rights and the new tokens
-        IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(tokens * 10 ** 10, from);
-        _mint(from, tokens * 10 ** 10);
-    }
+	//Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
+	function receiveApproval(address from, uint256 tokens, address token, bytes  calldata data) public {
+	        require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
+	        require(ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens), "Must transfer 0xBitcoin V1 to receive RightsTo0xBitcoin and Based Work Tokens");
+	
+	        // Mint rights and the new tokens
+	        IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(tokens * 10 ** 10, from);
+	        _mint(from, tokens * 10 ** 10);
+	}
         
 
 
 	
-    //In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  So only 8 decimals for amountOf_0xBTC_ToRecieve
-	function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
+   	//In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  So only 8 decimals for amountOf_0xBTC_ToRecieve
+	//Must have RightsTo0xBitcoin Tokens & Based Work Token to convert back to 0xBitcoin.
+    	function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
 		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).burnToken(amountOf_0xBTC_ToRecieve * 10**10, msg.sender);
 		_burn(msg.sender, amountOf_0xBTC_ToRecieve *  10 ** 10 );
 		ERC20(_0xBitcoin_Address).transfer(msg.sender, amountOf_0xBTC_ToRecieve);
-	
 	}
 	
 
