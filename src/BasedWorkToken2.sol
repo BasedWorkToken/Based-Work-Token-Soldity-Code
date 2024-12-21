@@ -62,6 +62,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 // File: contracts/BasedWorkToken.sol
 
@@ -107,6 +108,46 @@ library ExtendedMath2 {
         if (a > b) return b;
 
         return a;
+    }
+}
+
+// File: contracts/utils/SafeMath.sol
+
+library SafeMath2 {
+    function add(uint256 x, uint256 y) internal pure returns (uint256) {
+        uint256 z = x + y;
+        require(z >= x, "Add overflow");
+        return z;
+    }
+
+    function sub(uint256 x, uint256 y) internal pure returns (uint256) {
+        require(x >= y, "Sub underflow");
+        return x - y;
+    }
+
+    function mult(uint256 x, uint256 y) internal pure returns (uint256) {
+        if (x == 0) {
+            return 0;
+        }
+
+        uint256 z = x * y;
+        require(z / x == y, "Mult overflow");
+        return z;
+    }
+
+    function div(uint256 x, uint256 y) internal pure returns (uint256) {
+        require(y != 0, "Div by zero");
+        return x / y;
+    }
+
+    function divRound(uint256 x, uint256 y) internal pure returns (uint256) {
+        require(y != 0, "Div by zero");
+        uint256 r = x / y;
+        if (x % y != 0) {
+            r = r + 1;
+        }
+
+        return r;
     }
 }
 
@@ -172,46 +213,6 @@ contract a0xbtcMock is ERC20Permit {
     }
     
    
-}
-
-// File: contracts/utils/SafeMath.sol
-
-library SafeMath2 {
-    function add(uint256 x, uint256 y) internal pure returns (uint256) {
-        uint256 z = x + y;
-        require(z >= x, "Add overflow");
-        return z;
-    }
-
-    function sub(uint256 x, uint256 y) internal pure returns (uint256) {
-        require(x >= y, "Sub underflow");
-        return x - y;
-    }
-
-    function mult(uint256 x, uint256 y) internal pure returns (uint256) {
-        if (x == 0) {
-            return 0;
-        }
-
-        uint256 z = x * y;
-        require(z / x == y, "Mult overflow");
-        return z;
-    }
-
-    function div(uint256 x, uint256 y) internal pure returns (uint256) {
-        require(y != 0, "Div by zero");
-        return x / y;
-    }
-
-    function divRound(uint256 x, uint256 y) internal pure returns (uint256) {
-        require(y != 0, "Div by zero");
-        uint256 r = x / y;
-        if (x % y != 0) {
-            r = r + 1;
-        }
-
-        return r;
-    }
 }
 
 
