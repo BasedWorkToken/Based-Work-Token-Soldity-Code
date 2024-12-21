@@ -1298,6 +1298,10 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
     //Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
     function receiveApproval(address from, uint256 tokens, address token, bytes  calldata data) public {
         require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
+
+	// Ensure the caller is the token contract to avoid unauthorized calls
+	require(msg.sender == _0xBitcoin_Address, "Unauthorized caller");
+
         require(ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens), "Must transfer 0xBitcoin to receive RightsTo0xBitcoin and Based Work Token");
 
         // Mint rights and the new tokens
