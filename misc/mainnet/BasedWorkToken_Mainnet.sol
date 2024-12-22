@@ -61,12 +61,12 @@ pragma solidity ^0.8.13;
 
 
 contract Ownable {
-    address public owner;
-    event TransferOwnership(address _from, address _to);
+    address public immutable owner;
+    //event TransferOwnership(address _from, address _to);
 
     constructor() {
         owner = msg.sender;
-        emit TransferOwnership(address(0), msg.sender);
+        //emit TransferOwnership(address(0), msg.sender);
     }
 
     modifier onlyOwner() {
@@ -298,10 +298,10 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    string private _name;
+    string private  _name;
     string private _symbol;
-    uint _maxTotalSupply;
-    uint8 _decimals;
+    uint immutable _totalSupply;
+    uint8 immutable _decimals;
 
     /**
      * @dev Sets the values for {name} and {symbol}.
@@ -315,7 +315,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     constructor(string memory name_, string memory symbol_, uint8 decimals_, uint totalSupply_) {
         _name = name_;
         _symbol = symbol_;
-        _maxTotalSupply = totalSupply_;
+        _totalSupply = totalSupply_;
         _decimals = decimals_;
     }
 
@@ -355,7 +355,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
      * @dev See {IERC20-totalSupply}.
      */
     function totalSupply() public view virtual override returns (uint256) {
-        return _maxTotalSupply;
+        return _totalSupply;
     }
 
     /**
@@ -1270,11 +1270,11 @@ contract RightsTo0xBitcoin is ERC20Permit, Ownable {
 
 contract BasedWorkToken_Mainnet is ERC20Permit {
 
-    address public _0xBitcoin_Address = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31); //0xBitcoin Address
+    address constant public _0xBitcoin_Address = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31); //0xBitcoin Address
      
     RightsTo0xBitcoin child2 = new RightsTo0xBitcoin(); //Launches RightsTo0xBitcoin contract for us
         
-    address public _RightsTo0xBitcoin_Address = address(child2);//_RightsTo0xBitcoinV1;
+    address public immutable _RightsTo0xBitcoin_Address = address(child2);//_RightsTo0xBitcoinV1;
 
 
     
@@ -1287,6 +1287,7 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
     }
     
     //Deposit 0xBitcoin into the contract and recieve RightsTo0xBitcoin and Based Work Token in 1:1.
+    //Remember 0xBitcoin has 8 decimals
 	function depositFromV1toV2(uint amount) public {
 	
 		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin to recieve RightsTo0xBitcoin and Based Work Token");
@@ -1299,8 +1300,8 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
     function receiveApproval(address from, uint256 tokens, address token, bytes  calldata data) public {
         require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
 
-	// Ensure the caller is the token contract to avoid unauthorized calls
-	require(msg.sender == _0xBitcoin_Address, "Unauthorized caller");
+        // Ensure the caller is the token contract to avoid unauthorized calls
+        require(msg.sender == _0xBitcoin_Address, "Unauthorized caller");
 
         require(ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens), "Must transfer 0xBitcoin to receive RightsTo0xBitcoin and Based Work Token");
 
@@ -1312,12 +1313,14 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
 
 
 	
-    //In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  So only 8 decimals for amountOf_0xBTC_ToRecieve
+    //In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  
+    //So only 8 decimals for amountOf_0xBTC_ToRecieve
 	//Must have RightsTo0xBitcoin Tokens & Based Work Token to convert back to 0xBitcoin.
     function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
 		IRightsTo0xBitcoin(_RightsTo0xBitcoin_Address).burnToken(amountOf_0xBTC_ToRecieve * 10**10, msg.sender);
-		_burn(msg.sender, amountOf_0xBTC_ToRecieve *  10 ** 10 );
-		ERC20(_0xBitcoin_Address).transfer(msg.sender, amountOf_0xBTC_ToRecieve);
+		_burn(msg.sender, amountOf_0xBTC_ToRecieve *  10 ** 10);
+        bool success = ERC20(_0xBitcoin_Address).transfer(msg.sender, amountOf_0xBTC_ToRecieve);
+    	require(success, "Transfer failed of 0xBTC out of contract");
 	
 	}
 	
