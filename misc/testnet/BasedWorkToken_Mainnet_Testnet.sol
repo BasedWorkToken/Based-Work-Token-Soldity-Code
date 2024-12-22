@@ -1,17 +1,6 @@
+// Testnet Based Work Token - BWORK Token - Token and 0xBitcoin <-> BWORK Conversion Contract Ethereum Network
 //
-// CHANGES NEEDED FOR MAINNET
-// CHANGES NEEDED FOR MAINNET
-    //a0xBitcoin_mock public child1 = new a0xBitcoin_mock(); // DELETE OR COMMENT OUT FOR MAINNET
- //   address public _0xBitcoin_Address = address(child1); // WILL BE = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31); for mainnet ETH
- //   MUST CHANGE ABOVE, REMOVE a0xBTCmock from import contracts
- //   MUST CHANGE ABOVE, REMOVE a0xBTCmock from import contract
-
-
-
-
-// Based Work Token - BWORK Token - Token and 0xBitcoin <-> BWORK Conversion Contract Ethereum Network
-//
-// Website: https://BasedWorkToken.org/
+// Website: https://testnet.BasedWorkToken.org/
 // Github: https://github.com/BasedWorkToken/
 // Discord: https://discord.gg/QrGNf47ATk/
 // Twitter: https://x.com/BasedWorkToken/
@@ -43,6 +32,15 @@
 //
 // startTime =  1738771200;  //Date and time (GMT): Wednesday, Feb 5, 2025 4:00:00 PM GMT then openMining functioncan then be called and mining will have rewards, until then all rewards will be 0.
 
+//
+// CHANGES NEEDED FOR MAINNET
+// CHANGES NEEDED FOR MAINNET
+    //a0xBitcoin_mock public child1 = new a0xBitcoin_mock(); // DELETE OR COMMENT OUT FOR MAINNET
+ //   address public constant immutable _0xBitcoin_Address = address(child1); // WILL BE = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31); for mainnet ETH
+ //   MUST CHANGE ABOVE, REMOVE a0xBTCmock from import contracts
+ //   MUST CHANGE ABOVE, REMOVE a0xBTCmock from import contract
+
+
 
 
 
@@ -71,13 +69,15 @@ pragma solidity ^0.8.13;
 
 
 
+
+
 contract Ownable {
-    address public owner;
-    event TransferOwnership(address _from, address _to);
+    address public immutable owner;
+    //event TransferOwnership(address _from, address _to);
 
     constructor() {
         owner = msg.sender;
-        emit TransferOwnership(address(0), msg.sender);
+        //emit TransferOwnership(address(0), msg.sender);
     }
 
     modifier onlyOwner() {
@@ -91,6 +91,7 @@ contract Ownable {
     }
     */
 }
+
 
 
 
@@ -311,8 +312,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
     string private _name;
     string private _symbol;
-    uint _maxTotalSupply;
-    uint8 _decimals;
+    uint immutable _maxTotalSupply;
+    uint8 immutable _decimals;
 
     /**
      * @dev Sets the values for {name} and {symbol}.
@@ -1121,9 +1122,9 @@ abstract contract ERC20Permit is ERC20, IERC20Permit, EIP712 {
 
 // File: contracts/BasedWorkToken.sol
 
-// Based Work Token - BWORK Token - Token and 0xBitcoin <-> BWORK Conversion Contract Ethereum Network
+// Testnet Based Work Token - BWORK Token - Token and 0xBitcoin <-> BWORK Conversion Contract Ethereum Network
 //
-// Website: https://BasedWorkToken.org/
+// Website: https://testnet.BasedWorkToken.org/
 // Github: https://github.com/BasedWorkToken/
 // Discord: https://discord.gg/QrGNf47ATk/
 // Twitter: https://x.com/BasedWorkToken/
@@ -1230,7 +1231,7 @@ library ExtendedMath2 {
 }
 
 
-interface IRightsTo0xBitcoinV1 {
+interface IRightsTo0xBitcoin {
     function withdrawToken(uint256 _amount, address _to) external;
     function burnToken(uint256 _amount, address _from) external;
 }
@@ -1239,7 +1240,7 @@ interface IRightsTo0xBitcoinV1 {
 
 
 
-contract RightsTo0xBitcoinV1 is ERC20Permit, Ownable {
+contract RightsTo0xBitcoin is ERC20Permit, Ownable {
 	constructor() ERC20("Rights To 0xBitcoin Token", "R0xBTC", 18, 10_835_900 * 10**18 ) ERC20Permit("Rights To 0xBitcoin Token") {
      
     }
@@ -1305,8 +1306,7 @@ contract a0xBitcoin_mock is ERC20Permit {
         bytes calldata data
     ) public returns (bool success) {
         // Approve the spender to use tokens
-        increaseAllowance(spender, tokens);
-
+        _approve(msg.sender,spender, tokens);
         // Call the spender's `receiveApproval` function
         ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, address(this), data);
     }
@@ -1321,10 +1321,10 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
  // DELETE OR COMMENT OUT FOR MAINNET BELOW BELOW BELOW
 
     a0xBitcoin_mock public child1 = new a0xBitcoin_mock(); // DELETE OR COMMENT OUT FOR MAINNET
-    address public _0xBitcoin_Address = address(child1); // WILL BE = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31); for mainnet ETH
+    address public immutable _0xBitcoin_Address = address(child1); // WILL BE = address(0xB6eD7644C69416d67B522e20bC294A9a9B405B31); for mainnet ETH
      
-    RightsTo0xBitcoinV1 child2 = new RightsTo0xBitcoinV1(); //Launches RightsTo0xBitcoin contract for Based Work Token        
-    address public _RightsTo0xBitcoinV1_Address = address(child2);//_RightsTo0xBitcoinV1;
+    RightsTo0xBitcoin child2 = new RightsTo0xBitcoin(); //Launches RightsTo0xBitcoin contract for Based Work Token        
+    address public immutable _RightsTo0xBitcoin_Address = address(child2);//_RightsTo0xBitcoinV1;
 
 
     
@@ -1336,43 +1336,45 @@ contract BasedWorkToken_Mainnet is ERC20Permit {
         
     }
     
+	//Deposit 0xBitcoin into the contract and recieve RightsTo0xBitcoin and Based Work Token in 1:1.
+    //Remember 0xBitcoin has 8 decimals
 	function depositFromV1toV2(uint amount) public {
 	
-		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin V1 to recieve RightsTo0xBitcoinV1 and 0xBitcoin V2");
-		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(amount * 10 ** 10, msg.sender);
+		require(ERC20(_0xBitcoin_Address).transferFrom(msg.sender, address(this), amount), "Must transfer 0xBitcoin to recieve RightsTo0xBitcoin and Based Work Token");
+		IRightsTo0xBitcoin(_RightsTo0xBitcoin_Address).withdrawToken(amount * 10 ** 10, msg.sender);
 		_mint(msg.sender, amount * 10 ** 10);
 	
 	}
 
     //Function for Mainnet ETH to allow depositFromV1toV2 without an approval from 0xBitcoin.
-	
-    function receiveApproval(
-        address from,
-        uint256 tokens,
-        address token,
-        bytes  calldata data
-    ) public {
+    function receiveApproval(address from, uint256 tokens, address token, bytes  calldata data) public {
         require(token == _0xBitcoin_Address, "Invalid token"); // Ensure correct token
-        require(
-            ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens),
-            "Must transfer 0xBitcoin V1 to receive RightsTo0xBitcoinV1 and 0xBitcoin V2"
-        );
+
+        // Ensure the caller is the token contract to avoid unauthorized calls
+        require(msg.sender == _0xBitcoin_Address, "Unauthorized caller");
+
+        require(ERC20(_0xBitcoin_Address).transferFrom(from, address(this), tokens), "Must transfer 0xBitcoin to receive RightsTo0xBitcoin and Based Work Token");
 
         // Mint rights and the new tokens
-        IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).withdrawToken(tokens * 10 ** 10, from);
+        IRightsTo0xBitcoin(_RightsTo0xBitcoin_Address).withdrawToken(tokens * 10 ** 10, from);
         _mint(from, tokens * 10 ** 10);
     }
         
 
+
 	
-    //In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  So only 8 decimals for amountOf_0xBTC_ToRecieve
-	function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
-		IRightsTo0xBitcoinV1(_RightsTo0xBitcoinV1_Address).burnToken(amountOf_0xBTC_ToRecieve * 10**10, msg.sender);
-		_burn(msg.sender, amountOf_0xBTC_ToRecieve *  10 ** 10 );
-		ERC20(_0xBitcoin_Address).transfer(msg.sender, amountOf_0xBTC_ToRecieve);
+    //In withdraw to avoid having truncated numbers we use the 0xBTC you expect to RECIEVE from the conversion of 1:1.  
+    //So only 8 decimals for amountOf_0xBTC_ToRecieve
+	//Must have RightsTo0xBitcoin Tokens & Based Work Token to convert back to 0xBitcoin.
+    function withdrawFromV2toV1(uint amountOf_0xBTC_ToRecieve) public {
+		IRightsTo0xBitcoin(_RightsTo0xBitcoin_Address).burnToken(amountOf_0xBTC_ToRecieve * 10**10, msg.sender);
+		_burn(msg.sender, amountOf_0xBTC_ToRecieve *  10 ** 10);
+        bool success = ERC20(_0xBitcoin_Address).transfer(msg.sender, amountOf_0xBTC_ToRecieve);
+    	require(success, "Transfer failed of 0xBTC out of contract");
 	
 	}
 	
+
 
 
 }
